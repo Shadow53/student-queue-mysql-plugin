@@ -186,9 +186,11 @@ ConfigDB.prototype.createConfigTable = function(){
     var defer = new Deferred();
     that.connection.query("CREATE TABLE IF NOT EXISTS " + that.table + " (" +
             "`name` varchar(30) NOT NULL, " +
-            "`password` varchar(15) NOT NULL, " +
+        "`table_name` varchar(30) NOT NULL, " +
+        "`password` varchar(44) NOT NULL, " +
             "`description` varchar(1000) NULL, " +
-            "PRIMARY KEY (`name`)" +
+        "PRIMARY KEY (`table_name`), " +
+        "UNIQUE KEY `name` (`name`)" +
             ") ENGINE=MyISAM DEFAULT CHARSET=latin1", function (err, result) {
             if (err) defer.reject(err);
             else defer.resolve();
@@ -196,6 +198,7 @@ ConfigDB.prototype.createConfigTable = function(){
 
     return defer;
 };
+
 
 ConfigDB.prototype.addNewQueue = function(obj){
     var that = this;
@@ -374,7 +377,5 @@ ConfigDB.prototype.deleteQueue = function(name, tableName){
     return defer;
 };
 
-module.exports = {
-    RequestDB: RequestDB,
-    ConfigDB: ConfigDB
-};
+
+module.exports = ConfigDB;
