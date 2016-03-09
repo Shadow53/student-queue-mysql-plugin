@@ -1,0 +1,26 @@
+{
+  "contributors": [
+    {
+      "name": "Michael Bryant",
+      "email": "shadow53@shadow53.com"
+    }
+  ],
+  "dependencies": {
+    "mysql":"2.10.x",
+    "promised-io": "0.3.x"
+  },
+  "description": "Student Queue plugin for MySQL",
+  "installable": true,
+  "maintainers": [
+    {
+      "name": "Shadow53",
+      "email": "shadow53@shadow53.com"
+    }
+  ],
+  "name": "student-queue-mysql",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Shadow53/student-queue-mysql.git"
+  },
+  "license": "GPL-3.0"
+}
