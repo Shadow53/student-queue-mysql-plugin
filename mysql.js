@@ -87,7 +87,7 @@ RequestDB.prototype.add = function(request){
         }
         connection.query("SELECT * FROM " + that.table + " WHERE `studentid` = ? LIMIT 1",
             [request.id], function (err, result){
-            if (err) throw internalDefer.reject(err);
+                if (err) internalDefer.reject(err);
 
             if (result.length > 0){
                 internalDefer.reject(new Error("Record with key already exists"));
@@ -129,6 +129,29 @@ RequestDB.prototype.remove = function(id){
             if (err) defer.reject(err);
             else defer.resolve();
         });
+
+        connection.release();
+    });
+
+    return defer;
+};
+
+RequestDB.prototype.getAll = function () {
+    var that = this;
+    var internalDefer = new Deferred();
+    var defer = new Deferred();
+
+    that.pool.getConnection(function (err, connection) {
+        if (err) {
+            defer.reject(err);
+            return;
+        }
+        connection.query("SELECT * FROM " + that.table + " ORDER BY timestamp ASC",
+            function (err, result) {
+                if (err) defer.reject(err);
+
+                else defer.resolve(result);
+            });
 
         connection.release();
     });
