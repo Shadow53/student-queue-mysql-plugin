@@ -1,26 +1,37 @@
 {
   "contributors": [
-    {
-      "name": "Michael Bryant",
-      "email": "shadow53@shadow53.com"
-    }
+    "Michael Bryant <shadow53@shadow53.com>"
   ],
   "dependencies": {
-    "mysql":"2.10.x",
+    "mysql": "2.10.x",
     "promised-io": "0.3.x"
   },
-  "description": "Student Queue plugin for MySQL",
+  "description": "MySQL-compatible plugin for my student-queue program",
   "installable": true,
   "maintainers": [
-    {
-      "name": "Shadow53",
-      "email": "shadow53@shadow53.com"
-    }
+    "Shadow53 <shadow53@shadow53.com>"
   ],
-  "name": "student-queue-mysql",
+  "name": "student-queue-mysql-plugin",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Shadow53/student-queue-mysql.git"
+    "url": "git://github.com/Shadow53/student-queue-mysql-plugin.git"
   },
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": 
+"https://github.com/Shadow53/student-queue-mysql-plugin/issues"
+  },
+  "homepage": 
+"https://github.com/Shadow53/student-queue-mysql-plugin#readme",
+  "version": "0.1.0",
+  "main": "mysql.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "student-queue",
+    "mysql"
+  ],
+  "author": "Shadow53"
 }
