@@ -363,7 +363,7 @@ ConfigDB.prototype.getHash = function (name) {
     var that = this;
     var defer = new Deferred();
 
-    if (that.queues.hasOwnProperty(queueName)) {
+    if (that.queues.hasOwnProperty(name)) {
         that.connection.query("SELECT `hash` FROM " + that.table + " WHERE `name` = ? LIMIT 1",
             [queueName], function (err, result) {
                 if (err) defer.reject(err);
