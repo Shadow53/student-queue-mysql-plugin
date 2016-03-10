@@ -365,13 +365,13 @@ ConfigDB.prototype.getHash = function (name) {
 
     if (that.queues.hasOwnProperty(name)) {
         that.connection.query("SELECT `hash` FROM " + that.table + " WHERE `name` = ? LIMIT 1",
-            [queueName], function (err, result) {
+            [name], function (err, result) {
                 if (err) defer.reject(err);
                 else defer.resolve(result.hash);
             });
     }
     else {
-        defer.reject(new Error("No queue found with name " + queueName));
+        defer.reject(new Error("No queue found with name " + name));
     }
 
     return defer;
