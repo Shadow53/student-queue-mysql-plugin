@@ -6,18 +6,12 @@ var Deferred = require("promised-io/promise").Deferred;
 
 function checkName(name){
     if (typeof name !== "string"){
-        if (name !== undefined){
-            return false;
-        }
+        return false;
     }
     else{
         var valid = /(^\w)\w+/;
-        if (!valid.test(name)){
-            return false;
-        }
+        return valid.test(name);
     }
-
-    return true;
 }
 
 function RequestDB(obj) {
@@ -138,7 +132,6 @@ RequestDB.prototype.remove = function(id){
 
 RequestDB.prototype.getAll = function () {
     var that = this;
-    var internalDefer = new Deferred();
     var defer = new Deferred();
 
     that.pool.getConnection(function (err, connection) {
@@ -172,6 +165,14 @@ function ConfigDB(obj){
         }
 
         that.table = mysql.escapeId(obj.table);
+
+        that.host = obj.host;
+        that.user = obj.user;
+        that.password = obj.user;
+        that.database = obj.database;
+
+        // This gets set in load()
+        that.queues = {};
 
         that.connection = mysql.createConnection(obj);
 
@@ -212,6 +213,10 @@ ConfigDB.prototype.addNewQueue = function(obj){
         return;
     }
     else {
+        if (!obj.hasOwnProperty("table_name") || typeof obj.table_name !== "string") {
+            obj.table_name = obj.name;
+        }
+        
         that.connection.query("SELECT * FROM " + that.table + " WHERE `name` = ? LIMIT 1",
             [obj.name], function (err, result){
                 if (err) {
@@ -229,13 +234,8 @@ ConfigDB.prototype.addNewQueue = function(obj){
 
         doesExist.then(
             function() {
-                var tableName;
-                if (typeof obj.tableName === "string")
-                    tableName = obj.tableName;
-                else tableName = obj.name;
-
                 that.connection.query("CREATE TABLE ?? " + queueTableConfig,
-                    [tableName], function(err, result){
+                    [obj.table_name], function (err, result) {
                         if (err) queueTableDefer.reject(err);
                         else queueTableDefer.resolve();
                     });
@@ -248,12 +248,12 @@ ConfigDB.prototype.addNewQueue = function(obj){
             function(){
                 var hasDesc = obj.hasOwnProperty("description");
 
-                var sql = "INSERT INTO " + that.table + " (`name`, `password`" +
+                var sql = "INSERT INTO " + that.table + " (`name`, `password`, `table_name`" +
                     (hasDesc ? ", `description`" : "") +
-                    ") VALUES (?, ?" +
+                    ") VALUES (?, ?, ?" +
                     (hasDesc ? ", ?" : "") + ") ";
 
-                var inserts = [obj.name, obj.passwordHash];
+                var inserts = [obj.name, obj.passwordHash, obj.table_name];
                 if (hasDesc) {inserts.push(obj.description)}
 
                 sql = mysql.format(sql, inserts);
@@ -266,7 +266,9 @@ ConfigDB.prototype.addNewQueue = function(obj){
             function(err){
                 defer.reject(err);
             }
-        )
+        );
+
+        that.load();
     }
 
     return defer;
@@ -350,13 +352,13 @@ ConfigDB.prototype.updateDescription = function(name, desc){
     return updateArg(name, "description", desc, that);
 };
 
-ConfigDB.prototype.deleteQueue = function(name, tableName){
+ConfigDB.prototype.deleteQueue = function (name, table_name) {
     var that = this;
     var deleteDefer = new Deferred();
     var defer = new Deferred();
 
-    tableName = (tableName === undefined ? name : tableName);
-    that.connection.query("DROP TABLE ??", [tableName], function(err, result){
+    table_name = (table_name === undefined ? name : table_name);
+    that.connection.query("DROP TABLE ??", [table_name], function (err, result) {
         if (err) deleteDefer.reject(err);
         else deleteDefer.resolve();
     });
@@ -372,10 +374,48 @@ ConfigDB.prototype.deleteQueue = function(name, tableName){
         function(err){
             defer.reject(err);
         }
-    )
+    );
 
     return defer;
 };
 
+ConfigDB.prototype.getAllQueues = function () {
+    var that = this;
+    var defer = new Deferred();
+
+    that.connection.query("SELECT `name`, `description` FROM " + that.table + " ORDER BY `name` DESC",
+        function (err, result) {
+            if (err) defer.reject(err);
+            else defer.resolve(result);
+        });
+
+    return defer;
+};
+
+ConfigDB.prototype.load = function () {
+    var that = this;
+    var defer = new Deferred();
+
+    that.connection.query("SELECT `name`, `table_name` FROM " + that.table + " ORDER BY `name` DESC",
+        function (err, result) {
+            if (err) defer.reject(err);
+            else {
+                that.queues = {};
+                result.forEach(function (queue, i, arr) {
+                    console.log(queue);
+                    that.queues[queue.name] = new RequestDB({
+                        host: that.host,
+                        user: that.user,
+                        password: that.password,
+                        database: that.database,
+                        table: queue.table_name
+                    });
+                });
+                defer.resolve();
+            }
+        });
+
+    return defer;
+};
 
 module.exports = ConfigDB;
