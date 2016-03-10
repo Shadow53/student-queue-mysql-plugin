@@ -292,7 +292,7 @@ function updateArg(name, arg, val, that){
     return defer;
 }
 
-function hash(password) {
+function hashPassword(password) {
     var pwHash = crypto.createHash('sha256');
     pwHash.update(password);
     return pwHash.digest("base64");
@@ -300,7 +300,7 @@ function hash(password) {
 
 ConfigDB.prototype.setHash = function (name, password) {
     var that = this;
-    return updateArg(name, "password", hash(password), that);
+    return updateArg(name, "password", hashPassword(password), that);
 };
 
 ConfigDB.prototype.setQueueName = function (oldName, newName) {
@@ -450,7 +450,7 @@ ConfigDB.prototype.validatePassword = function (queueName, password) {
     var getHash = that.getHash(queueName);
     getHash.then(
         function (hash) {
-            var newHash = hash(password);
+            var newHash = hashPassword(password);
             if (hash === newHash)
                 defer.resolve();
             else defer.reject(new Error("Passwords did not match"));
