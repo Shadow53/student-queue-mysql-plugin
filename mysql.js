@@ -209,8 +209,8 @@ ConfigDB.prototype.addNewQueue = function(obj){
     var queueTableDefer = new Deferred();
     var defer = new Deferred();
 
-    if (!(obj.hasOwnProperty("name") && obj.hasOwnProperty("passwordHash"))){
-        defer.reject(new Error("Missing one or more of the required options: name, passwordHash"));
+    if (!(obj.hasOwnProperty("name") && obj.hasOwnProperty("hash"))) {
+        defer.reject(new Error("Missing one or more of the required options: name, hash"));
         return;
     }
     else {
@@ -254,7 +254,7 @@ ConfigDB.prototype.addNewQueue = function(obj){
                     ") VALUES (?, ?, ?" +
                     (hasDesc ? ", ?" : "") + ") ";
 
-                var inserts = [obj.name, obj.passwordHash, obj.table_name];
+                var inserts = [obj.name, obj.hash, obj.table_name];
                 if (hasDesc) {inserts.push(obj.description)}
 
                 sql = mysql.format(sql, inserts);
