@@ -3,6 +3,7 @@
  */
 var mysql = require("mysql");
 var Deferred = require("promised-io/promise").Deferred;
+var crypto = require("crypto");
 
 function checkName(name){
     if (typeof name !== "string"){
@@ -188,7 +189,7 @@ ConfigDB.prototype.createConfigTable = function(){
     that.connection.query("CREATE TABLE IF NOT EXISTS " + that.table + " (" +
             "`name` varchar(30) NOT NULL, " +
         "`table_name` varchar(30) NOT NULL, " +
-        "`password` varchar(44) NOT NULL, " +
+        "`hash` varchar(44) NOT NULL, " +
             "`description` varchar(1000) NULL, " +
         "PRIMARY KEY (`table_name`), " +
         "UNIQUE KEY `name` (`name`)" +
@@ -248,7 +249,7 @@ ConfigDB.prototype.addNewQueue = function(obj){
             function(){
                 var hasDesc = obj.hasOwnProperty("description");
 
-                var sql = "INSERT INTO " + that.table + " (`name`, `password`, `table_name`" +
+                var sql = "INSERT INTO " + that.table + " (`name`, `hash`, `table_name`" +
                     (hasDesc ? ", `description`" : "") +
                     ") VALUES (?, ?, ?" +
                     (hasDesc ? ", ?" : "") + ") ";
@@ -291,12 +292,12 @@ function updateArg(name, arg, val, that){
     return defer;
 }
 
-ConfigDB.prototype.updatePasswordHash = function(name, hash){
+ConfigDB.prototype.setHash = function (name, hash) {
     var that = this;
     return updateArg(name, "password", hash, that);
 };
 
-ConfigDB.prototype.updateQueueName = function(oldName, newName){
+ConfigDB.prototype.setQueueName = function (oldName, newName) {
     var that = this;
     var oldExist = new Deferred();
     var newExist = new Deferred();
@@ -347,9 +348,27 @@ ConfigDB.prototype.updateQueueName = function(oldName, newName){
     return defer;
 };
 
-ConfigDB.prototype.updateDescription = function(name, desc){
+ConfigDB.prototype.setDescription = function (name, desc) {
     var that = this;
     return updateArg(name, "description", desc, that);
+};
+
+ConfigDB.prototype.getHash = function (name) {
+    var that = this;
+    var defer = new Deferred();
+
+    if (that.queues.hasOwnProperty(queueName)) {
+        that.connection.query("SELECT `hash` FROM " + that.table + " WHERE `name` = ? LIMIT 1",
+            [queueName], function (err, result) {
+                if (err) defer.reject(err);
+                else defer.resolve(result.hash);
+            });
+    }
+    else {
+        defer.reject(new Error("No queue found with name " + queueName));
+    }
+
+    return defer;
 };
 
 ConfigDB.prototype.deleteQueue = function (name, table_name) {
@@ -414,6 +433,26 @@ ConfigDB.prototype.load = function () {
                 defer.resolve();
             }
         });
+
+    return defer;
+};
+
+ConfigDB.prototype.validatePassword = function (queueName, password) {
+    var that = this;
+    var defer = new Deferred();
+
+    var getHash = that.getHash(queueName);
+    getHash.then(
+        function (hash) {
+            var pwHash = crypto.createHash('sha256');
+            pwHash.update(password);
+            var newHash = pwHash.digest("base64");
+
+            if (hash === newHash)
+                defer.resolve();
+            else defer.reject(new Error("Passwords did not match"));
+        }
+    );
 
     return defer;
 };
