@@ -23,7 +23,7 @@
   },
   "homepage": 
 "https://github.com/Shadow53/student-queue-mysql-plugin#readme",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "mysql.js",
   "devDependencies": {},
   "scripts": {
