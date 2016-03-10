@@ -367,7 +367,7 @@ ConfigDB.prototype.getHash = function (name) {
         that.connection.query("SELECT `hash` FROM " + that.table + " WHERE `name` = ? LIMIT 1",
             [name], function (err, result) {
                 if (err) defer.reject(err);
-                else defer.resolve(result.hash);
+                else defer.resolve(result[0].hash);
             });
     }
     else {
