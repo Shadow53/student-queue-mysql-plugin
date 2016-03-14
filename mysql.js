@@ -157,15 +157,15 @@ function ConfigDB(obj){
     if (this instanceof ConfigDB){
         var that = this;
         if (!(obj.hasOwnProperty("host") && obj.hasOwnProperty("user") && obj.hasOwnProperty("password") &&
-            obj.hasOwnProperty("database") && obj.hasOwnProperty("table"))) {
-            throw new Error("Missing one or more of the required options: host, user, password, database, table")
+            obj.hasOwnProperty("database"))) {
+            throw new Error("Missing one or more of the required options: host, user, password, database")
         }
 
         if (!checkName(obj.table)){
             throw new Error("Invalid table name");
         }
 
-        that.table = mysql.escapeId(obj.table);
+        that.table = mysql.escapeId("config");
 
         that.host = obj.host;
         that.user = obj.user;
@@ -200,7 +200,6 @@ ConfigDB.prototype.createConfigTable = function(){
 
     return defer;
 };
-
 
 ConfigDB.prototype.addNewQueue = function(obj){
     var that = this;
