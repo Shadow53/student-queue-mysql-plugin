@@ -209,7 +209,7 @@ ConfigDB.prototype.addNewQueue = function(obj){
     var defer = new Deferred();
 
     if (!(obj.hasOwnProperty("name") && obj.hasOwnProperty("password"))) {
-        defer.reject(new Error("Missing one or more of the required options: name, hash"));
+        defer.reject(new Error("Missing one or more of the required options: name, password"));
         return;
     }
     else {
