@@ -161,10 +161,6 @@ function ConfigDB(obj){
             throw new Error("Missing one or more of the required options: host, user, password, database")
         }
 
-        if (!checkName(obj.table)){
-            throw new Error("Invalid table name");
-        }
-
         that.table = mysql.escapeId("config");
 
         that.host = obj.host;
