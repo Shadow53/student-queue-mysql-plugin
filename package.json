@@ -1,37 +1,88 @@
 {
+  "_args": [
+    [
+      "student-queue-mysql-plugin@0.1.x",
+      "/home/archlinux/Development/JavaScript/birkel-queue/node_modules/student-queue"
+    ]
+  ],
+  "_from": "student-queue-mysql-plugin@>=0.1.0 <0.2.0",
+  "_id": "student-queue-mysql-plugin@0.1.15",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/student-queue-mysql-plugin",
+  "_nodeVersion": "5.9.1",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/student-queue-mysql-plugin-0.1.15.tgz_1459225021012_0.30790677992627025"
+  },
+  "_npmUser": {
+    "email": "shadow53@tutanota.com",
+    "name": "shadow53"
+  },
+  "_npmVersion": "3.8.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "student-queue-mysql-plugin",
+    "raw": "student-queue-mysql-plugin@0.1.x",
+    "rawSpec": "0.1.x",
+    "scope": null,
+    "spec": ">=0.1.0 <0.2.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/student-queue"
+  ],
+  "_shasum": "613b4dd3df5abbe8990934a2d5585b8d261ef9da",
+  "_shrinkwrap": null,
+  "_spec": "student-queue-mysql-plugin@0.1.x",
+  "_where": "/home/archlinux/Development/JavaScript/birkel-queue/node_modules/student-queue",
+  "author": {
+    "name": "Shadow53"
+  },
+  "bugs": {
+    "url": "https://github.com/Shadow53/student-queue-mysql-plugin/issues"
+  },
   "contributors": [
-    "Michael Bryant <shadow53@shadow53.com>"
+    {
+      "email": "shadow53@shadow53.com",
+      "name": "Michael Bryant"
+    }
   ],
   "dependencies": {
     "mysql": "2.10.x",
-    "promised-io": "0.3.x"
+    "promise": "7.1.x"
   },
   "description": "MySQL-compatible plugin for my student-queue program",
-  "installable": true,
-  "maintainers": [
-    "Shadow53 <shadow53@shadow53.com>"
-  ],
-  "name": "student-queue-mysql-plugin",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Shadow53/student-queue-mysql-plugin.git"
-  },
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": 
-"https://github.com/Shadow53/student-queue-mysql-plugin/issues"
-  },
-  "homepage": 
-"https://github.com/Shadow53/student-queue-mysql-plugin#readme",
-  "version": "0.1.10",
-  "main": "mysql.js",
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "directories": {},
+  "dist": {
+    "shasum": "613b4dd3df5abbe8990934a2d5585b8d261ef9da",
+    "tarball": "http://registry.npmjs.org/student-queue-mysql-plugin/-/student-queue-mysql-plugin-0.1.15.tgz"
   },
+  "gitHead": "76b29dd21a3ee431d0a51a6a3d588b2e114abc57",
+  "homepage": "https://github.com/Shadow53/student-queue-mysql-plugin#readme",
+  "installable": true,
   "keywords": [
     "student-queue",
     "mysql"
   ],
-  "author": "Shadow53"
+  "license": "GPL-3.0",
+  "main": "mysql.js",
+  "maintainers": [
+    {
+      "email": "shadow53@tutanota.com",
+      "name": "shadow53"
+    }
+  ],
+  "name": "student-queue-mysql-plugin",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Shadow53/student-queue-mysql-plugin.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.1.15"
 }
