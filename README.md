@@ -1,7 +1,7 @@
 # student-queue-mysql-plugin
 MySQL-compatible Database plugin for my student-queue project
 
-This project makes use of the [mariasql](https://www.npmjs.com/package/mariasql) and [promised-io](https://www.npmjs.com/package/promised-io) npm plugins. It serves as an easy-to-use interface with which to use a MySQL database with the [student-queue](https://github.com/Shadow53/student-queue) program.
+This project makes use of the [mysql](https://www.npmjs.com/package/mysql) and [promised-io](https://www.npmjs.com/package/promised-io) npm plugins. It serves as an easy-to-use interface with which to use a MySQL database with the [student-queue](https://github.com/Shadow53/student-queue) program.
 
 ## Installation
 `npm install student-queue-mysql-plugin`
