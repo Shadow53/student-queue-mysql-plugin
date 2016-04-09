@@ -1,7 +1,7 @@
 # student-queue-mysql-plugin
 MySQL-compatible Database plugin for my student-queue project
 
-This project makes use of the [mysql](https://www.npmjs.com/package/mysql) and [promised-io](https://www.npmjs.com/package/promised-io) npm plugins. It serves as an easy-to-use interface with which to use a MySQL database with the [student-queue](https://github.com/Shadow53/student-queue) program.
+This project makes use of the [mariasql](https://www.npmjs.com/package/mariasql) and [promised-io](https://www.npmjs.com/package/promised-io) npm plugins. It serves as an easy-to-use interface with which to use a MySQL database with the [student-queue](https://github.com/Shadow53/student-queue) program.
 
 ## Installation
 `npm install student-queue-mysql-plugin`
@@ -11,15 +11,14 @@ This project makes use of the [mysql](https://www.npmjs.com/package/mysql) and [
 ### ConfigDB
 The ConfigDB is an interface with server configuration, mainly adding, removing, and otherwise maintaining various queues.
 
-##### Constructor
+##### Constructor (Used in Student Queue)
 ```javascript
-var mysql = require("student-queue-mysql-plugin");
-var config = new mysql.ConfigDB({
+var DB = require("student-queue-mysql-plugin");
+var config = new DB({
   host: "localhost",
-  user: "myUser",
+  user: "myDatabaseUser",
   password: "P@SSW0RD",
-  database: "studentqueue",
-  table: "config"
+  database: "studentqueue"
 });
 ```
 ##### Usage
@@ -35,8 +34,8 @@ config.createConfigTable(); // Does nothing if it exists
 // This adds an entry to the "config" table and creates a table called "testQueue" to act as the actual queue.
 config.addNewQueue({
   name: "testQueue",
-  // This is the sha256sum provided by the "login" script in student-queue
-  passwordHash: login.hashPassword("password"),
+  // This password will be hashed before being stored
+  password: "password",
   description: "A testing queue for demonstration", // Optional
   // tableName: "testing" // Also optional. Defaults to the value of "name"
 });
@@ -48,7 +47,7 @@ config.addNewQueue({
 +-------------+----------------------------------------------+-----------------------------------+
 */
 
-config.updateQueueName("testQueue", "cheese");
+config.setQueueName("testQueue", "cheese");
 /*
 +----------+----------------------------------------------+-----------------------------------+
 | name     | password                                     | description                       |
@@ -57,7 +56,7 @@ config.updateQueueName("testQueue", "cheese");
 +----------+----------------------------------------------+-----------------------------------+
 */
 
-config.updatePasswordHash("cheese", login.hashPassword("PASSWORD"));
+config.setHash("cheese", "PASSWORD");
 /*
 +----------+----------------------------------------------+-----------------------------------+
 | name     | password                                     | description                       |
@@ -66,7 +65,7 @@ config.updatePasswordHash("cheese", login.hashPassword("PASSWORD"));
 +----------+----------------------------------------------+-----------------------------------+
 */
 
-config.updateDescription("cheese", "This is a demonstration");
+config.setDescription("cheese", "This is a demonstration");
 /*
 +----------+----------------------------------------------+-------------------------+
 | name     | password                                     | description             |
@@ -86,14 +85,15 @@ config.deleteQueue("cheese", "testQueue");
 ```
 
 ### RequestDB
-The RequestDB is an interface to a particular queue on the server. It allows you to add and remove requests, get all requests, and empty the queue.
+The RequestDB is an interface to a particular queue on the server. It allows you to add and remove requests, get all requests, and empty the queue. These are loaded/updated onto `config.queues` when `config.load()` is called.
 
 ##### Constructor
 ```javascript
-var mysql = require("student-queue-mysql-plugin");
-var queueDB = new mysql.RequestDB({
+// This is used in ConfigDB.prototype.load()
+// RequestDB is not exported by the module and the constructor is not to be used outside of the above function
+var queueDB = new RequestDB({
   host: "localhost",
-  user: "myUser",
+  user: "myDatabaseUser",
   password: "P@SSW0RD",
   database: "studentqueue",
   table: "testQueue" // This table would have been created by config.addNewQueue()
