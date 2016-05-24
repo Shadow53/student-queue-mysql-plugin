@@ -269,9 +269,9 @@ ConfigDB.prototype.addNewQueue = function(obj){
     }
 };
 
-function updateArg(name, arg, val, that){
+function updateArg(name, arg, val, isNullable, that) {
     return new Promise(function (resolve, reject) {
-        if (typeof name !== "string" || typeof val !== "string") {
+        if (typeof name !== "string" || (!isNullable && val !== "string")) {
             reject(new Error("Missing one of the required arguments: name, " + arg));
             return;
         }
@@ -292,7 +292,7 @@ function hashPassword(password) {
 }
 
 ConfigDB.prototype.setHash = function (name, password) {
-    return updateArg(name, "hash", hashPassword(password), this);
+    return updateArg(name, "hash", hashPassword(password), false, this);
 };
 
 ConfigDB.prototype.setQueueName = function (oldName, newName) {
@@ -333,7 +333,8 @@ ConfigDB.prototype.setQueueName = function (oldName, newName) {
 };
 
 ConfigDB.prototype.setDescription = function (name, desc) {
-    return updateArg(name, "description", desc, this);
+    if (desc === "") desc = null;
+    return updateArg(name, "description", desc, true, this);
 };
 
 ConfigDB.prototype._getHash = function (name) {
