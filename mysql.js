@@ -189,7 +189,7 @@ ConfigDB.prototype.createConfigTable = function(){
                         if (result.length > 0) resolve();
                         else {
                             that.connection.query("INSERT INTO " + that.table +
-                                " (`name`, `hash`) VALUES ('admin', '" + hashPassword("password") + "')",
+                                " (`name`, `table_name`, `hash`) VALUES ('admin', 'admin', '" + hashPassword("password") + "')",
                                 function (err) {
                                     if (err) reject(err);
                                     else resolve();
