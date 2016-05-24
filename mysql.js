@@ -271,7 +271,7 @@ ConfigDB.prototype.addNewQueue = function(obj){
 
 function updateArg(name, arg, val, isNullable, that) {
     return new Promise(function (resolve, reject) {
-        if (typeof name !== "string" || (!isNullable && val !== "string")) {
+        if (typeof name !== "string" || (!isNullable && typeof val !== "string")) {
             reject(new Error("Missing one of the required arguments: name, " + arg));
             return;
         }
